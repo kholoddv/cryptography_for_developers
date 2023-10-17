@@ -1,4 +1,4 @@
-# Project for Tasks from course Cryptography for Developers
+# Project for Tasks from Course Cryptography for Developers
 
 ## Tasks
 
