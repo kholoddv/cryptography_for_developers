@@ -8,6 +8,7 @@ import static org.kholod.crypto.ArrayUtils.prepareArrays;
 public class MyBigInteger {
 
     private final static int HEX_SYMBOLS_PER_INT = 8;
+    private final static String HEX_STRING_PER_INT = "00000000";
     private final static int HEX_RADIX = 16;
 
     // Java doesn't provide unsigned int type, but we can use correspond methods from Integer class those allow us
@@ -37,7 +38,9 @@ public class MyBigInteger {
         StringBuilder hex = new StringBuilder();
         int index = 0;
         while (index < unsignedIntArray.length) {
-            hex.append(Integer.toHexString(unsignedIntArray[index]));
+            String hexInt = Integer.toHexString(unsignedIntArray[index]);
+            String hexIntWithLeadingZeroes = ("00000000" + hexInt).substring(hexInt.length());
+            hex.append(hexIntWithLeadingZeroes);
             index++;
         }
         return hex.toString();
@@ -49,6 +52,10 @@ public class MyBigInteger {
 
     public static MyBigInteger OR(MyBigInteger first, MyBigInteger second) {
         return binaryOperation(first, second, (n, m) -> n | m);
+    }
+
+    public static MyBigInteger AND(MyBigInteger first, MyBigInteger second) {
+        return binaryOperation(first, second, (n, m) -> n & m);
     }
 
     private static MyBigInteger binaryOperation(MyBigInteger first, MyBigInteger second, IntBinaryOperator operator) {
