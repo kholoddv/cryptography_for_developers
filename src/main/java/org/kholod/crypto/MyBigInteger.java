@@ -2,6 +2,8 @@ package org.kholod.crypto;
 
 import java.util.Arrays;
 
+import static org.kholod.crypto.ArrayUtils.prepareArrays;
+
 public class MyBigInteger {
 
     private final static int HEX_SYMBOLS_PER_INT = 8;
@@ -10,44 +12,6 @@ public class MyBigInteger {
     // Java doesn't provide unsigned int type, but we can use correspond methods from Integer class those allow us
     // to treat int as unsigned int - https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html
     private int[] unsignedIntArray;
-
-    static MyBigInteger XOR(MyBigInteger first, MyBigInteger second) {
-        int[] firstArray = first.unsignedIntArray;
-        int firstLength = firstArray.length;
-        int[] secondArray = second.unsignedIntArray;
-        int secondLength = secondArray.length;
-        int length = Math.max(firstLength, secondLength);
-        if (firstLength < length) {
-            firstArray = supplementArray(firstArray, secondArray);
-        }
-        if (secondLength < length) {
-            secondArray = supplementArray(secondArray, firstArray);
-        }
-
-        MyBigInteger result = new MyBigInteger();
-        int[] resultArray = new int[length];
-        for (int i = 0; i < length; i++) {
-            resultArray[i] = firstArray[i] ^ secondArray[i];
-        }
-        result.unsignedIntArray = resultArray;
-        return result;
-    }
-
-    static private int[] supplementArray(int[] little, int[] big) {
-        int[] newArray = new int[big.length];
-        int indexBig = big.length - 1;
-        int indexLittle = little.length - 1;
-        while(indexBig >= 0) {
-            if (indexLittle >=0) {
-                newArray[indexBig] = little[indexLittle];
-            } else {
-                newArray[indexBig] = 0;
-            }
-            indexBig--;
-            indexLittle--;
-        }
-        return newArray;
-    }
 
     void setHex(String hex) {
         int hexLength = hex.length();
@@ -76,6 +40,38 @@ public class MyBigInteger {
             index++;
         }
         return hex.toString();
+    }
+
+    static MyBigInteger XOR(MyBigInteger first, MyBigInteger second) {
+        int[][] preparedArrays = prepareArrays(first.unsignedIntArray, second.unsignedIntArray);
+
+        int[] firstArray = preparedArrays[0];
+        int[] secondArray = preparedArrays[1];
+        int length = firstArray.length;
+        int[] resultArray = new int[length];
+        for (int i = 0; i < length; i++) {
+            resultArray[i] = firstArray[i] ^ secondArray[i];
+        }
+
+        MyBigInteger result = new MyBigInteger();
+        result.unsignedIntArray = resultArray;
+        return result;
+    }
+
+    static MyBigInteger OR(MyBigInteger first, MyBigInteger second) {
+        int[][] preparedArrays = prepareArrays(first.unsignedIntArray, second.unsignedIntArray);
+
+        int[] firstArray = preparedArrays[0];
+        int[] secondArray = preparedArrays[1];
+        int length = firstArray.length;
+        int[] resultArray = new int[length];
+        for (int i = 0; i < length; i++) {
+            resultArray[i] = firstArray[i] | secondArray[i];
+        }
+
+        MyBigInteger result = new MyBigInteger();
+        result.unsignedIntArray = resultArray;
+        return result;
     }
 
     @Override
