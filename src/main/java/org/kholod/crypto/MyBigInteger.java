@@ -1,6 +1,7 @@
 package org.kholod.crypto;
 
 import java.util.Arrays;
+import java.util.function.IntBinaryOperator;
 
 import static org.kholod.crypto.ArrayUtils.prepareArrays;
 
@@ -13,7 +14,7 @@ public class MyBigInteger {
     // to treat int as unsigned int - https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html
     private int[] unsignedIntArray;
 
-    void setHex(String hex) {
+    public void setHex(String hex) {
         int hexLength = hex.length();
         int arrayLength = hexLength / HEX_SYMBOLS_PER_INT;
         if (hexLength % HEX_SYMBOLS_PER_INT > 0) {
@@ -32,7 +33,7 @@ public class MyBigInteger {
         }
     }
 
-    String getHex() {
+    public String getHex() {
         StringBuilder hex = new StringBuilder();
         int index = 0;
         while (index < unsignedIntArray.length) {
@@ -42,23 +43,15 @@ public class MyBigInteger {
         return hex.toString();
     }
 
-    static MyBigInteger XOR(MyBigInteger first, MyBigInteger second) {
-        int[][] preparedArrays = prepareArrays(first.unsignedIntArray, second.unsignedIntArray);
-
-        int[] firstArray = preparedArrays[0];
-        int[] secondArray = preparedArrays[1];
-        int length = firstArray.length;
-        int[] resultArray = new int[length];
-        for (int i = 0; i < length; i++) {
-            resultArray[i] = firstArray[i] ^ secondArray[i];
-        }
-
-        MyBigInteger result = new MyBigInteger();
-        result.unsignedIntArray = resultArray;
-        return result;
+    public static MyBigInteger XOR(MyBigInteger first, MyBigInteger second) {
+        return binaryOperation(first, second, (n, m) -> n ^ m);
     }
 
-    static MyBigInteger OR(MyBigInteger first, MyBigInteger second) {
+    public static MyBigInteger OR(MyBigInteger first, MyBigInteger second) {
+        return binaryOperation(first, second, (n, m) -> n | m);
+    }
+
+    private static MyBigInteger binaryOperation(MyBigInteger first, MyBigInteger second, IntBinaryOperator operator) {
         int[][] preparedArrays = prepareArrays(first.unsignedIntArray, second.unsignedIntArray);
 
         int[] firstArray = preparedArrays[0];
@@ -66,7 +59,7 @@ public class MyBigInteger {
         int length = firstArray.length;
         int[] resultArray = new int[length];
         for (int i = 0; i < length; i++) {
-            resultArray[i] = firstArray[i] | secondArray[i];
+            resultArray[i] = operator.applyAsInt(firstArray[i], secondArray[i]);
         }
 
         MyBigInteger result = new MyBigInteger();
