@@ -7,6 +7,7 @@ public class App {
         testXOR();
         testOR();
         testAND();
+        testINV();
     }
 
     private static void testXOR() {
@@ -59,6 +60,21 @@ public class App {
         System.out.println("result");
         System.out.println(result.getHex());
         String expectedResult = "403d208400a113220340808088d16a1b10121078400c1002748196dd62460204";
+        System.out.println("Check result: " + expectedResult.equals(result.getHex()));
+        System.out.println();
+    }
+
+    private static void testINV() {
+        System.out.println("----------------------------");
+        System.out.println("TEST INV");
+        MyBigInteger number = new MyBigInteger();
+        number.setHex("51bf608414ad5726a3c1bec098f77b1b54ffb2787f8d528a74c1d7fde6470ea4");
+        MyBigInteger result = INV(number);
+        System.out.println("INV");
+        System.out.println(number.getHex());
+        System.out.println("result");
+        System.out.println(result.getHex());
+        String expectedResult = "ae409f7beb52a8d95c3e413f670884e4ab004d878072ad758b3e280219b8f15b";
         System.out.println("Check result: " + expectedResult.equals(result.getHex()));
         System.out.println();
     }

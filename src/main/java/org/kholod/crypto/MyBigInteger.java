@@ -46,6 +46,16 @@ public class MyBigInteger {
         return hex.toString();
     }
 
+    public static MyBigInteger INV(MyBigInteger number) {
+        int[] array = number.unsignedIntArray;
+        for (int i = 0; i < array.length; i++) {
+            array[i] = ~array[i];
+        }
+        MyBigInteger result = new MyBigInteger();
+        result.unsignedIntArray = array;
+        return result;
+    }
+
     public static MyBigInteger XOR(MyBigInteger first, MyBigInteger second) {
         return binaryOperation(first, second, (n, m) -> n ^ m);
     }
